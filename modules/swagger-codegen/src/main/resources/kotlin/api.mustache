@@ -1,0 +1,45 @@
+package {{package}}
+
+import retrofit.Callback
+import retrofit.http.*
+import retrofit.mime.*
+{{#imports}}import {{import}}
+{{/imports}}{{^fullJavaUtil}}
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.List
+import java.util.Map
+{{/fullJavaUtil}}
+
+{{#operations}}
+interface {{classname}} {
+// <editor-fold desc="Synchronous API Methods">
+{{#operation}}
+    /**
+    * {{summary}}
+    * Sync method
+    * {{notes}}
+    {{#allParams}}* @param {{paramName}} {{description}}
+    {{/allParams}}* @return {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}
+    */
+    {{#formParams}}{{#-first}}{{#isMultipart}}@Multipart{{/isMultipart}}{{^isMultipart}}@FormUrlEncoded{{/isMultipart}}{{/-first}}{{/formParams}}@{{httpMethod}}("{{path}}")
+    fun {{operationId}}({{^allParams}}){{/allParams}}{{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{#hasMore}}, {{/hasMore}}{{^hasMore}}): {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Object{{/returnType}}{{/hasMore}}{{/allParams}}
+{{/operation}}
+// </editor-fold>
+
+// <editor-fold desc="Asynchronous API Methods">
+{{#operation}}
+    /**
+    * {{summary}}
+    * Async method
+    {{#allParams}}* @param {{paramName}} {{description}}
+    {{/allParams}}* @param cb callback method
+    * @return void
+    */
+    {{#formParams}}{{#-first}}
+    {{#isMultipart}}@Multipart{{/isMultipart}}{{^isMultipart}}@FormUrlEncoded{{/isMultipart}}{{/-first}}{{/formParams}}@{{httpMethod}}("{{path}}")
+    fun {{operationId}}({{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}, {{/allParams}}cb: Callback<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Object{{/returnType}}>):Unit
+{{/operation}}
+// </editor-fold>
+}
+{{/operations}}

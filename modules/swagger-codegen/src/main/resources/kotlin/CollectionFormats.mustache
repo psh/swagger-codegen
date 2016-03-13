@@ -1,0 +1,106 @@
+package io.swagger.client
+
+import java.util.*
+
+object CollectionFormats {
+
+    open class CSVParams {
+
+        var params: List<String>? = null
+
+        constructor() {
+        }
+
+        constructor(params: List<String>) {
+            this.params = params
+        }
+
+        constructor(vararg params: String) {
+            this.params = Arrays.asList(*params)
+        }
+
+        override fun toString(): String {
+            return join(params, ",")
+        }
+
+    }
+
+    class SSVParams : CSVParams {
+
+        constructor() {
+        }
+
+        constructor(params: List<String>) : super(params) {
+        }
+
+        constructor(vararg params: String) : super(*params) {
+        }
+
+        override fun toString(): String {
+            return join(params, " ")
+        }
+    }
+
+    class TSVParams : CSVParams {
+
+        constructor() {
+        }
+
+        constructor(params: List<String>) : super(params) {
+        }
+
+        constructor(vararg params: String) : super(*params) {
+        }
+
+        override fun toString(): String {
+            return join(params, "\t")
+        }
+    }
+
+    class PIPESParams : CSVParams {
+
+        constructor() {
+        }
+
+        constructor(params: List<String>) : super(params) {
+        }
+
+        constructor(vararg params: String) : super(*params) {
+        }
+
+        override fun toString(): String {
+            return join(params, "|")
+        }
+    }
+
+    /**
+     * Join an array of strings with the given separator.
+     *
+     *
+     * Note: This might be replaced by utility method from commons-lang or guava someday
+     * if one of those libraries is added as dependency.
+     *
+
+     * @param array     The array of strings
+     * *
+     * @param separator The separator
+     * *
+     * @return the resulting string
+     */
+    fun join(array: List<String>?, separator: String): String {
+        if (array == null) {
+            return ""
+        }
+        val len = array.size
+        if (len == 0) {
+            return ""
+        }
+
+        val out = StringBuilder()
+        out.append(array[0])
+        for (i in 1..len - 1) {
+            out.append(separator).append(array[i])
+        }
+        return out.toString()
+    }
+}

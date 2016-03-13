@@ -1,0 +1,43 @@
+package {{package}}
+
+import java.util.Objects
+{{#imports}}import {{import}}
+{{/imports}}
+
+import com.google.gson.annotations.SerializedName
+
+{{#models}}{{#model}}{{#description}}
+    /**
+    * {{description}}
+    **/
+{{/description}}class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#serializableModel}}implements Serializable{{/serializableModel}} {
+{{#vars}}
+    @SerializedName("{{baseName}}")
+    var {{name}}:{{{datatypeWithEnum}}}? = {{{defaultValue}}}
+
+{{/vars}}
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || javaClass != other.javaClass) {
+            return false
+        }
+        val other{{classVarName}} = other as {{classname}}?{{#hasVars}}
+        return {{#vars}}{{name}} == other{{classVarName}}?.{{name}}{{#hasMore}} &&
+            {{/hasMore}}{{^hasMore}}{{/hasMore}}{{/vars}}{{/hasVars}}{{^hasVars}}
+        return true{{/hasVars}}
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash({{#vars}}{{name}}{{#hasMore}}, {{/hasMore}}{{/vars}})
+    }
+
+    override fun toString(): String {
+        return "{{classname}} { {{#vars}}{{name}}: ${{name}}\n{{/vars}} }"
+    }
+{{#vars}}{{#isEnum}}
+    {{>libraries/okhttp-gson/enumClass}}{{/isEnum}}{{/vars}}{{#vars}}{{#items.isEnum}}
+    {{#items}}{{>libraries/okhttp-gson/enumClass}}{{/items}}{{/items.isEnum}}{{/vars}}
+}
+{{/model}}
+
+{{/models}}
